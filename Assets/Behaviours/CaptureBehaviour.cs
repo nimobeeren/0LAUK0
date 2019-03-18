@@ -123,12 +123,18 @@ public class CaptureBehaviour : MonoBehaviour
         		capturing = false;
         		StopCoroutine("ScreenshotLoop");
         		Debug.Log("Stopped capture");
+
+                // Delete the files
                 System.IO.File.Delete(oldName);
                 System.IO.File.Delete(newName);
         	}
         	else
         	{
-        		// Start capturing
+                // Create the files
+                System.IO.File.Create(oldName).Close();
+                System.IO.File.Create(newName).Close();
+                
+                // Start capturing
 	            capturing = true;
 	            StartCoroutine("ScreenshotLoop");
 	            Debug.Log("Started capture at " + FPS + " FPS");
