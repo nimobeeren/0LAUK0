@@ -39,7 +39,7 @@ if __name__ == '__main__':
 	if len(sys.argv) > 1:
 		file = sys.argv[1]
 	else:
-		file = "/home/nimo/Share/Documents/Unity Projects/0LAUK0/scrot.ppm"
+		file = "../../scrot.jpg"
 
 	# Read first frame from image
 	frame = cv2.imread(file)
