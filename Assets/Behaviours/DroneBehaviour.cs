@@ -15,7 +15,6 @@ public class DroneBehaviour : MonoBehaviour
 	public float eta1;
 	public float eta2;
 
-    private bool flying;
 	private Rigidbody rb;
 	private Rigidbody targetRb;
 	private GameObject[] obstacles;
@@ -24,9 +23,6 @@ public class DroneBehaviour : MonoBehaviour
 
     void Start()
     {
-        // Wait for input before flying
-        flying = false;
-
     	// Get Rigidbody components for self and target
     	rb = GetComponent<Rigidbody>();
     	targetRb = target.GetComponent<Rigidbody>();
@@ -47,19 +43,9 @@ public class DroneBehaviour : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            flying = true;
-        }
-    }
-
     // FixedUpdate is called once per phyiscs update
     void FixedUpdate()
     {
-    	if (!flying) return;
-
     	// Get some useful values 
         Vector3 dronePos = transform.position;
         Vector3 droneVel = rb.velocity;
