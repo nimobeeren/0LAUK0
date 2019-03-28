@@ -63,7 +63,9 @@ public class TargetBehaviour : MonoBehaviour
         Vector3 nextWaypointDir = path[nextWaypoint] - transform.position;
         float nextWaypointDist = nextWaypointDir.magnitude;
         
-        if (userDistance < 3f/4f * defaultDistance / Mathf.Cos(Mathf.Deg2Rad * userAngle) * stabilizationTime)
+
+        if (nextWaypointDist > 0 &&
+        	userDistance < 3f/4f * defaultDistance / Mathf.Cos(Mathf.Deg2Rad * userAngle) * stabilizationTime)
         {
             Debug.Log("User too close");
             float moveDist = Mathf.Min(defaultDistance - userDistance, nextWaypointDist);  // make sure we don't move past the waypoint
@@ -82,8 +84,8 @@ public class TargetBehaviour : MonoBehaviour
             userDirection0 = userDirection;
         }
 
-        // If we have reached the current waypoint, select the next node in the path
-        if (nextWaypointDist <= waypointMargin)
+        // If we have reached the current waypoint, select the next node in the path (unless this is the last one)
+        if (nextWaypointDist <= waypointMargin && nextWaypoint < path.Count - 1)
         {
             Debug.Log("Reached waypoint");
             nextWaypoint++;
