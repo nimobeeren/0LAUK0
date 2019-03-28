@@ -15,6 +15,7 @@ public class TargetBehaviour : MonoBehaviour
     private List<Vector3> path;          // sequence of waypoints to follow to get to the destination
     private int nextWaypoint = 1;        // index of the next waypoint in the path
 
+	private GUIBehaviour gui;
     private Vector3 userDirection0;
     private Vector3 userDirection;
     private float userAngle;
@@ -23,6 +24,9 @@ public class TargetBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+    	// Get GUI script
+    	gui = GameObject.Find("GUI").GetComponent<GUIBehaviour>();
+
         // Find shortest path from current position to destination, using navNodes as waypoints
         path = Pathfinding.GetShortestPath(gameObject, destination);
 
@@ -47,13 +51,13 @@ public class TargetBehaviour : MonoBehaviour
     // FixedUpdate is called once per physics update
     void FixedUpdate()
     {
-
         // Calculate user angle and distance
         userDirection = user.transform.position - transform.position;
         userDirection.y = 0;  // project onto the horizontal plane
         userAngle = Vector3.Angle(userDirection, userDirection0);
         userDistance = userDirection.magnitude;
 
+        gui.setVar("User angle", userAngle);
         Debug.DrawRay(transform.position, userDirection0, Color.white);
         Debug.DrawRay(transform.position, userDirection, Color.red);
         
@@ -90,10 +94,5 @@ public class TargetBehaviour : MonoBehaviour
             Debug.Log("Reached waypoint");
             nextWaypoint++;
         }
-    }
-
-    void OnGUI()
-    {
-        GUI.Label(new Rect(10, 10, 200, 20), "User angle: " + userAngle);
     }
 }
