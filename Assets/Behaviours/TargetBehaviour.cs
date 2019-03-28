@@ -47,8 +47,6 @@ public class TargetBehaviour : MonoBehaviour
     // FixedUpdate is called once per physics update
     void FixedUpdate()
     {
-        // Don't try to move if there is no path
-        if (path == null || nextWaypoint >= path.Count) return;
 
         // Calculate user angle and distance
         userDirection = user.transform.position - transform.position;
@@ -58,6 +56,9 @@ public class TargetBehaviour : MonoBehaviour
 
         Debug.DrawRay(transform.position, userDirection0, Color.white);
         Debug.DrawRay(transform.position, userDirection, Color.red);
+        
+        // Don't try to move if there is no path
+        if (path == null || nextWaypoint >= path.Count) return;
 
         Vector3 nextWaypointDir = path[nextWaypoint] - transform.position;
         float nextWaypointDist = nextWaypointDir.magnitude;
