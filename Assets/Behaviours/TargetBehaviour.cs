@@ -18,7 +18,7 @@ public class TargetBehaviour : MonoBehaviour
 	private GUIBehaviour gui;
     private Vector3 userDirection0;
     private Vector3 userDirection;
-    private float userAngle;
+    private float userAngle = 0f;
     private float userDistance;
 
     // Start is called before the first frame update
@@ -38,10 +38,10 @@ public class TargetBehaviour : MonoBehaviour
         else
         {
             // Draw a line along the path
-            // for (int i = 0; i < path.Count - 1; i++)
-            // {
-            //     Debug.DrawLine(path[i], path[i+1], Color.green, Mathf.Infinity);
-            // }
+            for (int i = 0; i < path.Count - 1; i++)
+            {
+                Debug.DrawLine(path[i], path[i+1], Color.green, Mathf.Infinity);
+            }
         }
 
         userDirection0 = user.transform.position - transform.position;
@@ -65,6 +65,7 @@ public class TargetBehaviour : MonoBehaviour
         userDistance = userDirection.magnitude;
 
         gui.setVar("User angle", userAngle);
+        gui.setVar("User distance", userDistance);
         Debug.DrawRay(transform.position, userDirection0, Color.white);
         Debug.DrawRay(transform.position, userDirection, Color.red);
         
@@ -74,7 +75,6 @@ public class TargetBehaviour : MonoBehaviour
         Vector3 nextWaypointDir = path[nextWaypoint] - transform.position;
         float nextWaypointDist = nextWaypointDir.magnitude;
         
-
         if (nextWaypointDist > 0 &&
         	userDistance < 3f/4f * defaultDistance / Mathf.Cos(Mathf.Deg2Rad * userAngle) * stabilizationTime)
         {

@@ -11,11 +11,19 @@ public class GUIBehaviour : MonoBehaviour
     public int margin = 5;
 
 	private Dictionary<string, string> vars;
+    private bool show = true;
 
-    // Start is called before the first frame update
     void Start()
     {
         vars = new Dictionary<string, string>();
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F12))
+        {
+            show = !show;
+        }
     }
 
     public void setVar(string key, string value)
@@ -30,6 +38,8 @@ public class GUIBehaviour : MonoBehaviour
 
     void OnGUI()
     {
+        if (!show) return;
+        
     	// Draw box
     	GUI.Box(new Rect(xPos, yPos, width + 2 * margin, (vars.Count + 1) * lineHeight + 2 * margin), "Inspector");
 
