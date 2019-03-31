@@ -48,6 +48,13 @@ public class TargetBehaviour : MonoBehaviour
         userDirection0.y = 0;  // project onto the horizontal plane
     }
 
+    void OnDrawGizmos()
+    {
+        // Draw a yellow sphere at the transform's position
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(transform.position, 0.15f);
+    }
+
     // FixedUpdate is called once per physics update
     void FixedUpdate()
     {
@@ -73,19 +80,32 @@ public class TargetBehaviour : MonoBehaviour
         {
             Debug.Log("User too close");
             float moveDist = Mathf.Min(defaultDistance - userDistance, nextWaypointDist);  // make sure we don't move past the waypoint
+
             transform.position += moveDist * nextWaypointDir.normalized;
-            userDirection0 = userDirection;
+            userDirection0 = user.transform.position - transform.position;
+            userDirection0.y = 0;  // project onto horizontal plane
         }
         if (userAngle > toleranceAngle / 2f * stabilizationTime)
         {
             Debug.Log("User went sideways");
-            userDirection0 = userDirection;
+
+            Vector3 waypointUserDir = user.transform.position - path[nextWaypoint];
+            float beta = Mathf.Deg2Rad * Vector3.SignedAngle(userDirection, waypointUserDir, Vector3.up);
+            float delta = Mathf.PI/2 - beta;
+            float moveDist = userDistance * Mathf.Sin(beta);
+            Vector3 move = moveDist * userDirection.normalized;  // vector with correct magnitude but in direction of user
+            move = new Vector3(move.x * Mathf.Cos(delta) - move.z * Mathf.Sin(delta), 0, move.x * Mathf.Sin(delta) + move.z * Mathf.Cos(delta));  // rotated vector
+
+            transform.position += move;
+            userDirection0 = user.transform.position - transform.position;
+            userDirection0.y = 0;  // project onto horizontal plane
         }
         if (userDistance > 3f/2f * defaultDistance / Mathf.Cos(Mathf.Deg2Rad * userAngle) * stabilizationTime)
         {
             Debug.Log("User too far");
             transform.position += (userDistance - defaultDistance) * userDirection.normalized;
-            userDirection0 = userDirection;
+            userDirection0 = user.transform.position - transform.position;
+            userDirection0.y = 0;  // project onto horizontal plane
         }
 
         // If we have reached the current waypoint, select the next node in the path (unless this is the last one)
