@@ -38,3 +38,8 @@ sysinfo.txt
 
 # Screenshot output
 scrot.jpg
+
+# Build
+*_Data/
+*.x86_64
+*.exe
