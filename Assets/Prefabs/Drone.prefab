@@ -107,11 +107,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  lambda1: 0.3
-  lambda2: 0.1
+  maxSpeed: 3
+  maxObstacleDistance: 2
+  lambda1: 0.8
+  lambda2: 0.5
   eta1: 0.3
   eta2: 0.01
-  maxSpeed: 4
 --- !u!54 &8820435842565203471
 Rigidbody:
   m_ObjectHideFlags: 0

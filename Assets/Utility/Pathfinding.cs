@@ -140,7 +140,7 @@ public static class Pathfinding
                     // Nodes have line of sight to eachother
                     v.neighbors.Add(u);
                     u.neighbors.Add(v);
-                    // Debug.DrawLine(u.position, v.position, Color.yellow, Mathf.Infinity);
+                    Debug.DrawLine(u.position, v.position, Color.yellow, Mathf.Infinity);
                 }
             }
         }

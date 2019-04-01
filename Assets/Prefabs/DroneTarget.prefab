@@ -45,8 +45,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   destination: {fileID: 0}
   user: {fileID: 0}
-  speed: 2
   waypointMargin: 0.1
-  toleranceAngle: 90
+  toleranceAngle: 45
   defaultDistance: 4
   stabilizationTime: 1
