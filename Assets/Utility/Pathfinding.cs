@@ -134,7 +134,7 @@ public static class Pathfinding
                 Vector3 origin = v.position;
                 Vector3 direction = u.position - v.position;
                 float dist = Node.Distance(v, u);
-                int layerMask = ~(1 << 9);  // we can see through objects in Debug layer (9)
+                int layerMask = ~(1 << 10);  // we can see through objects in IgnorePathfinding layer (10)
                 if (!Physics.Raycast(origin, direction, dist, layerMask))
                 {
                     // Nodes have line of sight to eachother
