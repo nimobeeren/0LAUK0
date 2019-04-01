@@ -6,7 +6,6 @@ public class TargetBehaviour : MonoBehaviour
 {
     public GameObject destination;       // the final destination of the drone
     public GameObject user;
-    public float speed = 2;              // the (constant) speed at which the target moves to the destination
     public float waypointMargin = 0.1f;  // the maximum distance at which a waypoint is considered 'reached'
     public float toleranceAngle = 90;
     public float defaultDistance = 4;
