@@ -400,7 +400,7 @@ Transform:
   - {fileID: 826964226}
   - {fileID: 2720812860865909294}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &519871172 stripped
 Transform:
@@ -1405,90 +1405,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d720c3df28b37f0188fc906f84a3af15, type: 3}
---- !u!1001 &1609093901
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 5030970360998682694, guid: d720c3df28b37f0188fc906f84a3af15,
-        type: 3}
-      propertyPath: m_Name
-      value: Obstacle
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030970360998682698, guid: d720c3df28b37f0188fc906f84a3af15,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030970360998682698, guid: d720c3df28b37f0188fc906f84a3af15,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030970360998682698, guid: d720c3df28b37f0188fc906f84a3af15,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030970360998682698, guid: d720c3df28b37f0188fc906f84a3af15,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030970360998682698, guid: d720c3df28b37f0188fc906f84a3af15,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030970360998682698, guid: d720c3df28b37f0188fc906f84a3af15,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030970360998682698, guid: d720c3df28b37f0188fc906f84a3af15,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030970360998682698, guid: d720c3df28b37f0188fc906f84a3af15,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030970360998682698, guid: d720c3df28b37f0188fc906f84a3af15,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030970360998682698, guid: d720c3df28b37f0188fc906f84a3af15,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030970360998682698, guid: d720c3df28b37f0188fc906f84a3af15,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030970360998682698, guid: d720c3df28b37f0188fc906f84a3af15,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030970360998682698, guid: d720c3df28b37f0188fc906f84a3af15,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5030970360998682695, guid: d720c3df28b37f0188fc906f84a3af15,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: d720c3df28b37f0188fc906f84a3af15, type: 3}
 --- !u!1001 &1629326135
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1614,7 +1530,7 @@ Transform:
   - {fileID: 1001420945}
   - {fileID: 1084604817}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1821701381 stripped
 Transform:
@@ -2159,7 +2075,7 @@ PrefabInstance:
     - target: {fileID: 8820435842565203457, guid: 61e1770a242051eff887442b09352f3c,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8820435842565203457, guid: 61e1770a242051eff887442b09352f3c,
         type: 3}
