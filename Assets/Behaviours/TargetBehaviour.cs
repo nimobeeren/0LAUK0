@@ -4,43 +4,38 @@ using UnityEngine;
 
 public class TargetBehaviour : MonoBehaviour
 {
+    /* Configurable parameters */
     public GameObject destination;       // the final destination of the drone
     public GameObject user;
     public float waypointMargin = 0.1f;  // the maximum distance at which a waypoint is considered 'reached'
-    public float toleranceAngle = 90;
-    public float defaultDistance = 4;
-    public float stabilizationTime = 1;
+    public float toleranceAngle = 45;    // maximum angle at which the user can be to the drone before it adjusts sideways
+    public float defaultDistance = 4;    // distance to the user that the drone should try to keep
+    public float stabilizationTime = 1;  // currently ununsed
 
+    /* Pathfinding variables */
     private List<Vector3> path;          // sequence of waypoints to follow to get to the destination
     private int nextWaypoint = 1;        // index of the next waypoint in the path
 
-	private GUIBehaviour gui;
-    private Vector3 userDirection0;
-    private Vector3 userDirection;
-    private float userAngle = 0f;
-    private float userDistance;
+    /* Tolerance zone variables */
+    private Vector3 userDirection0;      // last significant direction of the user from the drone
+
+    /* Debug variables */
+    private GUIBehaviour gui;            // object used to display debug information
 
     // Start is called before the first frame update
     void Start()
     {
-    	// Get GUI script
-    	gui = GameObject.Find("GUI").GetComponent<GUIBehaviour>();
+        // Get GUI script
+        gui = GameObject.Find("GUI").GetComponent<GUIBehaviour>();
 
         // Find shortest path from current position to destination, using navNodes as waypoints
         path = Pathfinding.GetShortestPath(gameObject, destination);
+        gui.SetPathfindingInfo(Pathfinding.nodes, path);
 
-        // Display the path
+        // Check if path is valid
         if (path == null || path.Count == 0)
         {
             Debug.Log("Failed to find a valid path");
-        }
-        else
-        {
-            // Draw a line along the path
-            for (int i = 0; i < path.Count - 1; i++)
-            {
-                Debug.DrawLine(path[i], path[i+1], Color.green, Mathf.Infinity);
-            }
         }
 
         userDirection0 = user.transform.position - transform.position;
@@ -58,24 +53,29 @@ public class TargetBehaviour : MonoBehaviour
     void FixedUpdate()
     {
         // Calculate user angle and distance
-        userDirection = user.transform.position - transform.position;
+        Vector3 userDirection = user.transform.position - transform.position;
         userDirection.y = 0;  // project onto the horizontal plane
-        userAngle = Vector3.Angle(userDirection, userDirection0);
-        userDistance = userDirection.magnitude;
+        float userAngle = Vector3.Angle(userDirection, userDirection0);
+        float userDistance = userDirection.magnitude;
 
-        gui.setVar("User angle", userAngle);
-        gui.setVar("User distance", userDistance);
-        Debug.DrawRay(transform.position, userDirection0, Color.white);
-        Debug.DrawRay(transform.position, userDirection, Color.red);
+        // Output debug information
+        if (gui)
+        {
+            gui.SetVar("User angle", userAngle);
+            gui.SetVar("User distance", userDistance);
+            gui.SetTargetInfo(transform.position, userDirection, userDirection0);
+        }
         
         // Don't try to move if there is no path
         if (path == null || nextWaypoint >= path.Count) return;
 
+        // Calculate distance and direction of next waypoint
         Vector3 nextWaypointDir = path[nextWaypoint] - transform.position;
         float nextWaypointDist = nextWaypointDir.magnitude;
         
+        // Adjust target position when user steps out of tolerance zone
         if (nextWaypointDist > 0 &&
-        	userDistance < 3f/4f * defaultDistance / Mathf.Cos(Mathf.Deg2Rad * userAngle) * stabilizationTime)
+            userDistance < 3f/4f * defaultDistance / Mathf.Cos(Mathf.Deg2Rad * userAngle) * stabilizationTime)
         {
             Debug.Log("User too close");
             float moveDist = Mathf.Min(defaultDistance - userDistance, nextWaypointDist);  // make sure we don't move past the waypoint

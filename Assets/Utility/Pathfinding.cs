@@ -37,6 +37,8 @@ public class Node
 
 public static class Pathfinding
 {
+    public static List<Node> nodes;
+
     /**
     Traces back the path from the starting node to the current node when A* is finished.
     */
@@ -140,7 +142,6 @@ public static class Pathfinding
                     // Nodes have line of sight to eachother
                     v.neighbors.Add(u);
                     u.neighbors.Add(v);
-                    Debug.DrawLine(u.position, v.position, Color.yellow, Mathf.Infinity);
                 }
             }
         }
@@ -160,7 +161,7 @@ public static class Pathfinding
     public static List<Vector3> GetShortestPath(Vector3 start, Vector3 goal)
     {
         // Create list that will contain all nodes in the pathfinding graph
-        List<Node> nodes = new List<Node>();
+        nodes = new List<Node>();
         
         // Create nodes for NavNodes
         GameObject[] nodeObjs = GameObject.FindGameObjectsWithTag("NavNode");
