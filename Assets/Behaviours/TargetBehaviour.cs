@@ -42,13 +42,6 @@ public class TargetBehaviour : MonoBehaviour
         userDirection0.y = 0;  // project onto the horizontal plane
     }
 
-    void OnDrawGizmos()
-    {
-        // Draw a yellow sphere at the transform's position
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(transform.position, 0.15f);
-    }
-
     // FixedUpdate is called once per physics update
     void FixedUpdate()
     {

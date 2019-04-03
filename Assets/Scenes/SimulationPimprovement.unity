@@ -19949,7 +19949,23 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8294684512124584474, guid: 9a40eba4c2b9ed083a24aba50e428f2f,
+        type: 3}
+      propertyPath: color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8294684512124584474, guid: 9a40eba4c2b9ed083a24aba50e428f2f,
+        type: 3}
+      propertyPath: color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8294684512124584474, guid: 9a40eba4c2b9ed083a24aba50e428f2f,
+        type: 3}
+      propertyPath: color.b
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 8294684512124584474, guid: 9a40eba4c2b9ed083a24aba50e428f2f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9a40eba4c2b9ed083a24aba50e428f2f, type: 3}
 --- !u!4 &1098984173 stripped
 Transform:
@@ -27244,7 +27260,7 @@ PrefabInstance:
     - target: {fileID: 6257079037125936531, guid: 6e19130f58892377faf6f939d81a1127,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -19.02
+      value: -19
       objectReference: {fileID: 0}
     - target: {fileID: 6257079037125936531, guid: 6e19130f58892377faf6f939d81a1127,
         type: 3}
@@ -27254,7 +27270,7 @@ PrefabInstance:
     - target: {fileID: 6257079037125936531, guid: 6e19130f58892377faf6f939d81a1127,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -58.1
+      value: -58
       objectReference: {fileID: 0}
     - target: {fileID: 6257079037125936531, guid: 6e19130f58892377faf6f939d81a1127,
         type: 3}
@@ -29922,6 +29938,11 @@ PrefabInstance:
     - target: {fileID: 8818259997077359726, guid: 701e54d36b698b33fa8626f3b8dbdd32,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8818259997077359727, guid: 701e54d36b698b33fa8626f3b8dbdd32,
+        type: 3}
+      propertyPath: showTarget
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -37582,6 +37603,11 @@ PrefabInstance:
       propertyPath: user
       value: 
       objectReference: {fileID: 757166173}
+    - target: {fileID: 873549668747384922, guid: 165ff170ad3b80d2eb593cd27b8b5bb4,
+        type: 3}
+      propertyPath: toleranceAngle
+      value: 45
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 165ff170ad3b80d2eb593cd27b8b5bb4, type: 3}
 --- !u!1 &2030859115

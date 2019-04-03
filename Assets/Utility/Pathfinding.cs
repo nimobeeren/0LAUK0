@@ -7,6 +7,9 @@ public class Node
     // The position of the node in 3D space
     public Vector3 position;
 
+    // The GameObjet associated with this node
+    public GameObject obj;
+
     // All nodes that can be reached from this one
     public List<Node> neighbors;
 
@@ -20,6 +23,17 @@ public class Node
     // This value is partly known, partly heuristic
     public float fScore = Mathf.Infinity;
 
+    /*
+    Creates a node at the position of a GameObject.
+    */
+    public Node(GameObject obj) : this(obj.transform.position)
+    {
+        this.obj = obj;
+    }
+
+    /*
+    Creates a node without the need of a GameObject.
+    */
     public Node(Vector3 pos)
     {
         position = pos;
@@ -167,7 +181,7 @@ public static class Pathfinding
         GameObject[] nodeObjs = GameObject.FindGameObjectsWithTag("NavNode");
         foreach (GameObject obj in nodeObjs)
         {
-            nodes.Add(new Node(obj.transform.position));
+            nodes.Add(new Node(obj));
         }
 
         // Create nodes for start and goal

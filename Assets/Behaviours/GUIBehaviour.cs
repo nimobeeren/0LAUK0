@@ -5,31 +5,45 @@ using UnityEngine;
 public class GUIBehaviour : MonoBehaviour
 {
     /* Visual parameters for inspector */
-	public int xPos = 10;
-	public int yPos = 10;
-	public int width = 200;
-	public int lineHeight = 20;
+    public int xPos = 10;
+    public int yPos = 10;
+    public int width = 200;
+    public int lineHeight = 20;
     public int margin = 5;
 
+    /* Which debug information to show */
+    public bool showTarget = false;
+    public bool showPathfinding = false;
+    public bool showInspector = false;
+
     /* Data structure to hold key,value pairs used for debugging */
-	private Dictionary<string, string> vars;
+    private Dictionary<string, string> vars;
 
     /* Debug variables for pathfinding */
     private List<Node> nodes;
     private List<Vector3> path;
 
     /* Debug variables for target */
+    private MeshRenderer targetRenderer;
+    private MeshRenderer destinationRenderer;
     private Vector3 targetPos;
     private Vector3 userDirection;
     private Vector3 userDirection0;
 
-    /* Which debug information to show */
-    private bool showTarget = false;
-    private bool showPathfinding = false;
-    private bool showInspector = false;
-
     void Start()
     {
+        // Get renderer components
+        GameObject target = GameObject.Find("DroneTarget");
+        GameObject destination = GameObject.Find("DroneDestination");
+        if (target)
+        {
+            targetRenderer = target.GetComponent<MeshRenderer>();
+        }
+        if (destination)
+        {
+            destinationRenderer = destination.GetComponent<MeshRenderer>();
+        }
+
         vars = new Dictionary<string, string>();
     }
 
@@ -49,31 +63,51 @@ public class GUIBehaviour : MonoBehaviour
             showInspector = !showInspector;
         }
 
-        if (showPathfinding)
+        /*
+        Draw visual debug information for pathfinding
+        */
+
+        if (nodes != null)
         {
-            if (nodes != null && nodes.Count > 0)
+            foreach (Node v in nodes)
             {
-                foreach (Node v in nodes)
+                // Show or hide all node objects
+                if (v.obj != null)
                 {
+                    MeshRenderer navRenderer = v.obj.GetComponent<MeshRenderer>();
+                    if (navRenderer)
+                    {
+                        navRenderer.enabled = showPathfinding;
+                    }
+                }
+                if (showPathfinding)
+                {
+                    // Draw lines between neighboring nodes
                     foreach (Node u in v.neighbors)
                     {
                         Debug.DrawLine(v.position, u.position, Color.yellow);
                     }
                 }
             }
-            if (path != null)
+        }
+
+        if (showPathfinding && path != null)
+        {
+            // Draw a line along the path
+            for (int i = 0; i < path.Count - 1; i++)
             {
-                // Draw a line along the path
-                for (int i = 0; i < path.Count - 1; i++)
-                {
-                    Debug.DrawLine(path[i], path[i+1], Color.green);
-                }
+                Debug.DrawLine(path[i], path[i+1], Color.green);
             }
         }
 
-        // Draw visual debug information for target
+        /*
+        Draw visual debug information for target
+        */
+        
+        targetRenderer.enabled = showTarget;  // show or hide target object
         if (showTarget)
         {
+            // Draw lines indicating user direction relative to target
             Debug.DrawRay(targetPos, userDirection, Color.red);
             Debug.DrawRay(targetPos, userDirection0, Color.white);
         }
@@ -110,11 +144,11 @@ public class GUIBehaviour : MonoBehaviour
 
     public void SetVar(string key, string value)
     {
-    	vars[key] = value;
+        vars[key] = value;
     }
 
-	public void SetVar(string key, float value)
-	{
-		SetVar(key, value.ToString());
-	}
+    public void SetVar(string key, float value)
+    {
+        SetVar(key, value.ToString());
+    }
 }
