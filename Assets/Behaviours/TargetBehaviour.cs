@@ -74,8 +74,6 @@ public class TargetBehaviour : MonoBehaviour
             float moveDist = Mathf.Min(defaultDistance - userDistance, nextWaypointDist);  // make sure we don't move past the waypoint
 
             transform.position += moveDist * nextWaypointDir.normalized;
-            userDirection0 = user.transform.position - transform.position;
-            userDirection0.y = 0;  // project onto horizontal plane
         }
         if (userAngle > toleranceAngle / 2f * stabilizationTime)
         {
@@ -96,8 +94,6 @@ public class TargetBehaviour : MonoBehaviour
         {
             Debug.Log("User too far");
             transform.position += (userDistance - defaultDistance) * userDirection.normalized;
-            userDirection0 = user.transform.position - transform.position;
-            userDirection0.y = 0;  // project onto horizontal plane
         }
 
         // If we have reached the current waypoint, select the next node in the path (unless this is the last one)
