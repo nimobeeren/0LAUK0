@@ -117,8 +117,8 @@ public class GUIBehaviour : MonoBehaviour
         if (showTarget)
         {
             // Draw lines indicating user direction relative to target
-            Debug.DrawRay(targetPos, userDirection, Color.red);
-            Debug.DrawRay(targetPos, userDirection0, Color.white);
+            // Debug.DrawRay(targetPos, userDirection, Color.red);
+            // Debug.DrawRay(targetPos, userDirection0, Color.white);
         }
     }
 

@@ -130,18 +130,6 @@ public class TargetBehaviour : MonoBehaviour
             3f/2f * defaultDistance * (U - Mathf.Tan(toleranceAngle/2) * UT)
         };
 
-        foreach (Vector3 v in zoneMesh.vertices)
-        {
-            Debug.Log(v);
-        }
-
-        // zoneMesh.vertices = new Vector3[] {
-        //     new Vector3(0, 0, 0),
-        //     new Vector3(1, 0, 0),
-        //     new Vector3(0, 0, 1),
-        //     new Vector3(1, 0, 1)
-        // };
-
         zoneMesh.triangles = new int[] {0, 1, 2, 1, 3, 2};
     }
 }
