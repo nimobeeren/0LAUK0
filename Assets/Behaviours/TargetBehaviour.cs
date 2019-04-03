@@ -17,6 +17,7 @@ public class TargetBehaviour : MonoBehaviour
     private int nextWaypoint = 1;        // index of the next waypoint in the path
 
     /* Tolerance zone variables */
+    private Mesh zoneMesh;               // mesh of tolerance zone visualization
     private Vector3 userDirection0;      // last significant direction of the user from the drone
 
     /* Debug variables */
@@ -27,6 +28,13 @@ public class TargetBehaviour : MonoBehaviour
     {
         // Get GUI script
         gui = GameObject.Find("GUI").GetComponent<GUIBehaviour>();
+
+        // Get tolerance zone mesh
+        GameObject zoneObj = transform.Find("ToleranceZone").gameObject;
+        if (zoneObj)
+        {
+            zoneMesh = zoneObj.GetComponent<MeshFilter>().mesh;            
+        }
 
         // Find shortest path from current position to destination, using navNodes as waypoints
         path = Pathfinding.GetShortestPath(gameObject, destination);
@@ -40,6 +48,7 @@ public class TargetBehaviour : MonoBehaviour
 
         userDirection0 = user.transform.position - transform.position;
         userDirection0.y = 0;  // project onto the horizontal plane
+        UpdateToleranceZone();
     }
 
     // FixedUpdate is called once per physics update
@@ -74,6 +83,7 @@ public class TargetBehaviour : MonoBehaviour
             float moveDist = Mathf.Min(defaultDistance - userDistance, nextWaypointDist);  // make sure we don't move past the waypoint
 
             transform.position += moveDist * nextWaypointDir.normalized;
+            UpdateToleranceZone();
         }
         if (userAngle > toleranceAngle / 2f * stabilizationTime)
         {
@@ -89,11 +99,13 @@ public class TargetBehaviour : MonoBehaviour
             transform.position += move;
             userDirection0 = user.transform.position - transform.position;
             userDirection0.y = 0;  // project onto horizontal plane
+            UpdateToleranceZone();
         }
         if (userDistance > 3f/2f * defaultDistance / Mathf.Cos(Mathf.Deg2Rad * userAngle) * stabilizationTime)
         {
             Debug.Log("User too far");
             transform.position += (userDistance - defaultDistance) * userDirection.normalized;
+            UpdateToleranceZone();
         }
 
         // If we have reached the current waypoint, select the next node in the path (unless this is the last one)
@@ -102,5 +114,34 @@ public class TargetBehaviour : MonoBehaviour
             Debug.Log("Reached waypoint");
             nextWaypoint++;
         }
+    }
+
+    void UpdateToleranceZone()
+    {
+        zoneMesh.Clear();
+
+        Vector3 U = userDirection0.normalized;
+        Vector3 UT = new Vector3(U.z, 0, -U.x);  // orthogonal to U
+
+        zoneMesh.vertices = new Vector3[] {
+            3f/4f * defaultDistance * (U + Mathf.Tan(toleranceAngle/2) * UT),
+            3f/4f * defaultDistance * (U - Mathf.Tan(toleranceAngle/2) * UT),
+            3f/2f * defaultDistance * (U + Mathf.Tan(toleranceAngle/2) * UT),
+            3f/2f * defaultDistance * (U - Mathf.Tan(toleranceAngle/2) * UT)
+        };
+
+        foreach (Vector3 v in zoneMesh.vertices)
+        {
+            Debug.Log(v);
+        }
+
+        // zoneMesh.vertices = new Vector3[] {
+        //     new Vector3(0, 0, 0),
+        //     new Vector3(1, 0, 0),
+        //     new Vector3(0, 0, 1),
+        //     new Vector3(1, 0, 1)
+        // };
+
+        zoneMesh.triangles = new int[] {0, 1, 2, 1, 3, 2};
     }
 }

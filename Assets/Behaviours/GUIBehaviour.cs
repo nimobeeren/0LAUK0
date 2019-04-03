@@ -26,6 +26,7 @@ public class GUIBehaviour : MonoBehaviour
     /* Debug variables for target */
     private MeshRenderer targetRenderer;
     private MeshRenderer destinationRenderer;
+    private MeshRenderer zoneRenderer;
     private Vector3 targetPos;
     private Vector3 userDirection;
     private Vector3 userDirection0;
@@ -35,6 +36,7 @@ public class GUIBehaviour : MonoBehaviour
         // Get renderer components
         GameObject target = GameObject.Find("DroneTarget");
         GameObject destination = GameObject.Find("DroneDestination");
+        GameObject toleranceZone = GameObject.Find("ToleranceZone");
         if (target)
         {
             targetRenderer = target.GetComponent<MeshRenderer>();
@@ -42,6 +44,10 @@ public class GUIBehaviour : MonoBehaviour
         if (destination)
         {
             destinationRenderer = destination.GetComponent<MeshRenderer>();
+        }
+        if (toleranceZone)
+        {
+            zoneRenderer = toleranceZone.GetComponent<MeshRenderer>();
         }
 
         vars = new Dictionary<string, string>();
@@ -66,6 +72,8 @@ public class GUIBehaviour : MonoBehaviour
         /*
         Draw visual debug information for pathfinding
         */
+
+        destinationRenderer.enabled = showPathfinding;  // show or hide destination object
 
         if (nodes != null)
         {
@@ -105,6 +113,7 @@ public class GUIBehaviour : MonoBehaviour
         */
         
         targetRenderer.enabled = showTarget;  // show or hide target object
+        zoneRenderer.enabled = showTarget;    // show or hide tolerance zone
         if (showTarget)
         {
             // Draw lines indicating user direction relative to target
