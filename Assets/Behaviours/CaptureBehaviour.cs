@@ -31,10 +31,6 @@ public class CaptureBehaviour : MonoBehaviour
 	{
 		while (true)
 		{
-            /* OLD METHOD
-			ScreenCapture.CaptureScreenshot(filename);
-            */
-
             // Create screenshot objects if needed
             if (renderTexture == null)
             {
