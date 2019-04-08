@@ -47,6 +47,7 @@ def print_bboxes(bboxes):
 		if len(bboxes[b]) < 4:
 			raise ValueError("Bounding box has invalid format")
 		print(bboxes[b])
+		sys.stdout.flush();  # make sure the output is immediately sent out
 		counter += 1
 
 
@@ -68,8 +69,6 @@ if __name__ == '__main__':
 		file = os.path.abspath(sys.argv[1])
 	else:
 		file = os.path.abspath("droneCam.ppm")
-
-	print(file)
 
 	# Read first frame from image
 	frame = read_image(file)

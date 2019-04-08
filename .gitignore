@@ -36,8 +36,8 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
-# Screenshot output
-scrot.jpg
+# Drone camera output
+droneCam.*
 
 # Build
 *_Data/
