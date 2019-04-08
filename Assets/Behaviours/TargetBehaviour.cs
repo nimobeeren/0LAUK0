@@ -20,6 +20,9 @@ public class TargetBehaviour : MonoBehaviour
     private Mesh zoneMesh;               // mesh of tolerance zone visualization
     private Vector3 userDirection0;      // last significant direction of the user from the drone
 
+    /* Tracking variables */
+    private Tracking tracking;           // used to get a bounding box of the user
+
     /* Debug variables */
     private GUIBehaviour gui;            // object used to display debug information
 
@@ -49,6 +52,9 @@ public class TargetBehaviour : MonoBehaviour
         userDirection0 = user.transform.position - transform.position;
         userDirection0.y = 0;  // project onto the horizontal plane
         UpdateToleranceZone();
+
+        // Initialize tracking
+        tracking = new Tracking();
     }
 
     // FixedUpdate is called once per physics update
@@ -114,6 +120,12 @@ public class TargetBehaviour : MonoBehaviour
             Debug.Log("Reached waypoint");
             nextWaypoint++;
         }
+    }
+
+    // Called when the object is destroyed or the game exits
+    void OnDestroy()
+    {
+        tracking.Stop();
     }
 
     void UpdateToleranceZone()
