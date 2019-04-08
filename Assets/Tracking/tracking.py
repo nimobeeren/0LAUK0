@@ -24,12 +24,12 @@ colors = {
 	'CSRT': (255, 255, 255)
 }
 
-def draw_bbox(bboxes):
+def draw_bbox(bboxes, frame):
 	"""Draws BBOX on screen."""
 	if len(bboxes) == 0:
 		return
 	else:
-		print_bboxes(bboxes)
+		print_bboxes(bboxes, frame)
 		for tracker in bboxes:
 			bbox = bboxes[tracker]
 			p1 = (int(bbox[0]), int(bbox[1]))
@@ -37,16 +37,27 @@ def draw_bbox(bboxes):
 			cv2.rectangle(frame, p1, p2, colors[tracker], 2, 1)
 
 
-def print_bboxes(bboxes):
+def print_bboxes(bboxes, frame):
 	"""Prints a list of bboxes to stdout."""
+	frameH, frameW, _ = frame.shape
 	counter = 0
 	for b in bboxes:
 		if counter > 0:
 			break  # only print the first bbox
 
-		if len(bboxes[b]) < 4:
+		bbox = bboxes[b]
+		if len(bbox) < 4:
 			raise ValueError("Bounding box has invalid format")
-		print(bboxes[b])
+
+		# Get bbox as proportion of frame size
+		bbox2 = [
+			bbox[0] / frameW,
+			bbox[1] / frameH,
+			bbox[2] / frameW,
+			bbox[3] / frameH
+		]
+
+		print(bbox2)
 		sys.stdout.flush();  # make sure the output is immediately sent out
 		counter += 1
 
@@ -124,7 +135,7 @@ if __name__ == '__main__':
 				bboxes[t] = bbox
 
 		# Draw resulting bounding boxes on screen
-		draw_bbox(bboxes)
+		draw_bbox(bboxes, frame)
 
 		# Display FPS on frame
 		timer = cv2.getTickCount()
