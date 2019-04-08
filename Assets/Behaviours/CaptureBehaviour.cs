@@ -13,14 +13,12 @@ using UnityEngine;
 public class CaptureBehaviour : MonoBehaviour
 {
 	public string filename;
-	public KeyCode captureKey;
-    public int captureWidth = 1920;
-    public int captureHeight = 1080;
+    public int captureWidth = 1280;
+    public int captureHeight = 720;
     public enum Format { RAW, JPG, PNG, PPM };
     public Format format = Format.PPM; // configure with raw, jpg, png, or ppm (simple raw format)
     public float FPS;
 
-	private bool capturing = false;
     private Rect rect;
     private RenderTexture renderTexture;
     private Texture2D screenShot;
@@ -101,40 +99,25 @@ public class CaptureBehaviour : MonoBehaviour
         // Define two filenames
         oldName = filename + "." + format.ToString().ToLower();      // file to use for tracking
         newName = filename + "-new." + format.ToString().ToLower();  // file to write to
+
+        // Create the files
+        System.IO.File.Create(oldName).Close();
+        System.IO.File.Create(newName).Close();
+        
+        // Start capturing
+        StartCoroutine("ScreenshotLoop");
+        Debug.Log("Started capture at " + FPS + " FPS");
     }
 
-    // Update is called once per frame
-    void Update()
+    // Called when game ends
+    void OnDestroy()
     {
-        if (Input.GetKeyDown(captureKey))
-        {
-        	if (FPS <= 0)
-        	{
-        		// Take a single screenshot
-        		ScreenCapture.CaptureScreenshot(filename + ".png");
-        	}
-        	else if (capturing)
-        	{
-        		// Stop capturing
-        		capturing = false;
-        		StopCoroutine("ScreenshotLoop");
-        		Debug.Log("Stopped capture");
+        // Stop capturing
+        StopCoroutine("ScreenshotLoop");
+        Debug.Log("Stopped capture");
 
-                // Delete the files
-                System.IO.File.Delete(oldName);
-                System.IO.File.Delete(newName);
-        	}
-        	else
-        	{
-                // Create the files
-                System.IO.File.Create(oldName).Close();
-                System.IO.File.Create(newName).Close();
-                
-                // Start capturing
-	            capturing = true;
-	            StartCoroutine("ScreenshotLoop");
-	            Debug.Log("Started capture at " + FPS + " FPS");
-        	}
-        }
+        // Delete the files
+        System.IO.File.Delete(oldName);
+        System.IO.File.Delete(newName);
     }
 }
