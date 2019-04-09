@@ -151,6 +151,5 @@ if __name__ == '__main__':
 		# Display result
 		cv2.imshow("Tracking", frame)
 
-		# Exit when the escape key is pressed
-		k = cv2.waitKey(1) & 0xff
-		if k == 27 : break
+		# Wait indefinitely
+		cv2.waitKey(1)
