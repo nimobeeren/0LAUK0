@@ -8,14 +8,14 @@ public class Tracking
 {
 	public Rect lastBbox;
 
-	private string script = "/home/nimo/Development/Unity/0LAUK0/Assets/Tracking/tracking.py";  // TODO: use relative path
+	private string script = "./Assets/Tracking/tracking.py";
 	private Process process;
 
 	// Starts a new python process to run the tracking script
     public Tracking()
     {
     	ProcessStartInfo psi = new ProcessStartInfo();
-    	psi.FileName = "/usr/bin/python3";  // TODO: make platform independent
+    	psi.FileName = "python3";
     	psi.Arguments = script;
     	psi.UseShellExecute = false;
     	psi.RedirectStandardOutput = true;
@@ -23,6 +23,7 @@ public class Tracking
     	UnityEngine.Debug.Log("Starting python process");
     	process = new Process();
     	process.OutputDataReceived += (sender, args) => UpdateBbox(args.Data);
+    	process.Exited += (sender, args) => UnityEngine.Debug.LogError("Tracker has exited");
     	process.StartInfo = psi;
 		process.Start();
 		process.BeginOutputReadLine();
@@ -45,6 +46,9 @@ public class Tracking
     // Simply kills the python process
     public void Stop()
     {
-    	process.Kill();
+    	if (process != null && !process.HasExited)
+    	{
+    		process.Kill();
+    	}
     }
 }
