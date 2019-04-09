@@ -6,10 +6,9 @@ using UnityEngine;
 
 public class Tracking
 {
-	public Rect lastBbox;
-
 	private string script = "./Assets/Tracking/tracking.py";
 	private Process process;
+	private Rect lastBbox;
 
 	// Starts a new python process to run the tracking script
     public Tracking()
@@ -50,5 +49,20 @@ public class Tracking
     	{
     		process.Kill();
     	}
+    }
+
+    public float GetObjectDistance(Camera droneCam, float objectHeight)
+    {
+    	if (!droneCam.usePhysicalProperties)
+    	{
+    		UnityEngine.Debug.LogError("Drone camera must have a rectilinear lens for distance computation");
+    		return -1;
+    	}
+
+    	float focalLength = droneCam.focalLength;
+    	float sensorHeight = droneCam.sensorSize.y;
+    	float bboxHeight = lastBbox.height;
+
+    	return focalLength / sensorHeight * objectHeight / bboxHeight;
     }
 }

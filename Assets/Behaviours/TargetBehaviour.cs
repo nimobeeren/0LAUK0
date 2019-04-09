@@ -6,7 +6,7 @@ public class TargetBehaviour : MonoBehaviour
 {
     /* Configurable parameters */
     public GameObject destination;       // the final destination of the drone
-    public GameObject user;
+    public GameObject user;              // the user that is following the drone
     public float waypointMargin = 0.1f;  // the maximum distance at which a waypoint is considered 'reached'
     public float toleranceAngle = 45;    // maximum angle at which the user can be to the drone before it adjusts sideways
     public float defaultDistance = 4;    // distance to the user that the drone should try to keep
@@ -22,6 +22,8 @@ public class TargetBehaviour : MonoBehaviour
 
     /* Tracking variables */
     private Tracking tracking;           // used to get a bounding box of the user
+    private Camera droneCam;             // camera placed on the drone, used for tracking the user
+    private float userHeight;            // real height of the user
 
     /* Debug variables */
     private GUIBehaviour gui;            // object used to display debug information
@@ -55,6 +57,8 @@ public class TargetBehaviour : MonoBehaviour
 
         // Initialize tracking
         tracking = new Tracking();
+        droneCam = GameObject.Find("DroneCamera").GetComponent<Camera>();
+        userHeight = user.GetComponent<Renderer>().bounds.size.y;
     }
 
     // FixedUpdate is called once per physics update
@@ -65,12 +69,14 @@ public class TargetBehaviour : MonoBehaviour
         userDirection.y = 0;  // project onto the horizontal plane
         float userAngle = Vector3.Angle(userDirection, userDirection0);
         float userDistance = userDirection.magnitude;
+        float computedUserDistance = tracking.GetObjectDistance(droneCam, userHeight);
 
         // Output debug information
         if (gui)
         {
-            gui.SetVar("User angle", userAngle);
-            gui.SetVar("User distance", userDistance);
+            gui.SetVar("Real user-target angle", userAngle);
+            gui.SetVar("Real user-target distance", userDistance);
+            gui.SetVar("Estimated user distance", computedUserDistance);
             gui.SetTargetInfo(transform.position, userDirection, userDirection0);
         }
         

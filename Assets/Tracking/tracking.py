@@ -50,15 +50,15 @@ def print_bboxes(bboxes, frame):
 			raise ValueError("Bounding box has invalid format")
 
 		# Get bbox as proportion of frame size
-		bbox2 = [
+		bbox2 = (
 			bbox[0] / frameW,
 			bbox[1] / frameH,
 			bbox[2] / frameW,
 			bbox[3] / frameH
-		]
+		)
 
 		print(bbox2)
-		sys.stdout.flush();  # make sure the output is immediately sent out
+		sys.stdout.flush()  # make sure the output is immediately sent out
 		counter += 1
 
 

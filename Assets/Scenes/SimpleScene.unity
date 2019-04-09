@@ -365,6 +365,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4776946216756178693, guid: 61e1770a242051eff887442b09352f3c,
+        type: 3}
+      propertyPath: m_SensorSize.x
+      value: 70
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 61e1770a242051eff887442b09352f3c, type: 3}
 --- !u!1 &1055089855 stripped
@@ -525,19 +530,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 873549668747384922, guid: 165ff170ad3b80d2eb593cd27b8b5bb4,
         type: 3}
-      propertyPath: waypointMargin
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 873549668747384922, guid: 165ff170ad3b80d2eb593cd27b8b5bb4,
-        type: 3}
       propertyPath: user
       value: 
       objectReference: {fileID: 2134472823}
-    - target: {fileID: 873549668747384922, guid: 165ff170ad3b80d2eb593cd27b8b5bb4,
-        type: 3}
-      propertyPath: toleranceAngle
-      value: 45
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 165ff170ad3b80d2eb593cd27b8b5bb4, type: 3}
 --- !u!1 &2134472823 stripped
