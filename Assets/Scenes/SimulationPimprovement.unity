@@ -20849,6 +20849,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1101906516}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1102994161 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8820435842565203461, guid: 61e1770a242051eff887442b09352f3c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1632315963}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1103554666
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38983,8 +38989,13 @@ PrefabInstance:
       objectReference: {fileID: 6257079037960603961}
     - target: {fileID: 873549668747384922, guid: 165ff170ad3b80d2eb593cd27b8b5bb4,
         type: 3}
-      propertyPath: toleranceAngle
-      value: 45
+      propertyPath: drone
+      value: 
+      objectReference: {fileID: 1102994161}
+    - target: {fileID: 873549668747384922, guid: 165ff170ad3b80d2eb593cd27b8b5bb4,
+        type: 3}
+      propertyPath: useTracking
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 165ff170ad3b80d2eb593cd27b8b5bb4, type: 3}
