@@ -122,7 +122,7 @@ public class TargetBehaviour : MonoBehaviour
             userPos0.y = 0;  // project onto horizontal plane
 
             // Point drone camera towards user
-            if (!dontMove)
+            if (useTracking && !dontMove)
             {
                 droneCam.transform.forward = userPos0;
             }
