@@ -139,13 +139,13 @@ if __name__ == '__main__':
 
 		# Display FPS on frame
 		timer = cv2.getTickCount()
-		fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer);
-		cv2.putText(frame, "FPS : " + str(int(fps)), (400,20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2);
+		fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer)
+		cv2.putText(frame, "FPS : " + str(int(fps)), (400,20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2)
 
 		# Draw names with respective colors
 		y = 20
 		for t in trackers:
-			cv2.putText(frame, t, (0, y), cv2.FONT_HERSHEY_SIMPLEX, 0.75, colors[t], 2);
+			cv2.putText(frame, t, (0, y), cv2.FONT_HERSHEY_SIMPLEX, 0.75, colors[t], 2)
 			y += 20
 		
 		# Display result
