@@ -13,6 +13,7 @@ public class TargetBehaviour : MonoBehaviour
     public float defaultDistance = 4;    // distance to the user that the drone should try to keep
     public float stabilizationTime = 1;  // currently ununsed
     public bool useTracking = false;     // whether to use tracking to determinine user position
+    public bool dontMove = false;        // whether to stay stationary (for testing e.g. tracking)
 
     /* Pathfinding variables */
     private List<Vector3> path;          // sequence of waypoints to follow to get to the destination
@@ -121,7 +122,10 @@ public class TargetBehaviour : MonoBehaviour
             userPos0.y = 0;  // project onto horizontal plane
 
             // Point drone camera towards user
-            droneCam.transform.forward = userPos0;
+            if (!dontMove)
+            {
+                droneCam.transform.forward = userPos0;
+            }
             
             return move;
         }
@@ -179,7 +183,7 @@ public class TargetBehaviour : MonoBehaviour
         
         // Adjust target position when user steps out of tolerance zone
         Vector3 movement = GetMovement();
-        if (movement.magnitude > 0)
+        if (movement.magnitude > 0 && !dontMove)
         {
             transform.position += movement;
             UpdateToleranceZone();
