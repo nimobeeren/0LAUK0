@@ -46,6 +46,11 @@ public class DroneBehaviour : MonoBehaviour
     // FixedUpdate is called once per phyiscs update
     void FixedUpdate()
     {
+        // if (!Input.GetKey(KeyCode.Space))
+        // {
+        //     return;
+        // }
+
     	// Get some useful values 
         Vector3 dronePos = transform.position;
         Vector3 droneVel = rb.velocity;

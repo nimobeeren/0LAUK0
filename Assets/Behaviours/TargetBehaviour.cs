@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +7,7 @@ public class TargetBehaviour : MonoBehaviour
     /* Configurable parameters */
     public GameObject destination;       // the final destination of the drone
     public GameObject user;              // the user that is following the drone
+    public GameObject drone;             // the drone itself
     public float waypointMargin = 0.1f;  // the maximum distance at which a waypoint is considered 'reached'
     public float toleranceAngle = 45;    // maximum angle at which the user can be to the drone before it adjusts sideways
     public float defaultDistance = 4;    // distance to the user that the drone should try to keep
@@ -18,15 +19,104 @@ public class TargetBehaviour : MonoBehaviour
 
     /* Tolerance zone variables */
     private Mesh zoneMesh;               // mesh of tolerance zone visualization
-    private Vector3 userDirection0;      // last significant direction of the user from the drone
+    private Vector3 userDir0;      // last significant direction of the user from the drone
 
     /* Tracking variables */
     private Tracking tracking;           // used to get a bounding box of the user
-    private Camera droneCam;             // camera placed on the drone, used for tracking the user
+    private GameObject droneCam;         // camera placed on the drone, used for tracking the user
     private float userHeight;            // real height of the user
 
     /* Debug variables */
     private GUIBehaviour gui;            // object used to display debug information
+
+    // Updates the tolerance zone mesh using the user direction and zone parameters
+    void UpdateToleranceZone()
+    {
+        zoneMesh.Clear();
+
+        Vector3 U = userDir0.normalized;
+        Vector3 UT = new Vector3(U.z, 0, -U.x);  // orthogonal to U
+
+        zoneMesh.vertices = new Vector3[] {
+            3f/4f * defaultDistance * (U + Mathf.Tan(toleranceAngle/2) * UT),
+            3f/4f * defaultDistance * (U - Mathf.Tan(toleranceAngle/2) * UT),
+            3f/2f * defaultDistance * (U + Mathf.Tan(toleranceAngle/2) * UT),
+            3f/2f * defaultDistance * (U - Mathf.Tan(toleranceAngle/2) * UT)
+        };
+
+        zoneMesh.triangles = new int[] {0, 1, 2, 1, 3, 2};
+    }
+
+    // Gets the relative movement 
+    Vector3 GetMovement()
+    {
+        // Get user-target direction and distance
+        Vector3 realUserDir = user.transform.position - transform.position;
+        realUserDir.y = 0;  // project onto the horizontal plane
+        float realUserAngle = Vector3.Angle(realUserDir, userDir0);
+        float realUserDist = realUserDir.magnitude;
+
+        // Estimate user position using tracking
+        Vector3 estUserPosition = drone.transform.position + tracking.GetObjectPosition(droneCam, userHeight);
+        Debug.DrawLine(drone.transform.position, estUserPosition, Color.red);
+
+        // Get drone direction and distance
+        Vector3 droneDir = drone.transform.position - transform.position;
+        droneDir.y = 0;  // project onto the horizontal plane
+        float droneDist = droneDir.magnitude;
+
+        // Get distance and direction of next waypoint
+        Vector3 nextWaypointDir = path[nextWaypoint] - transform.position;
+        float nextWaypointDist = nextWaypointDir.magnitude;
+
+        // Output debug information
+        if (gui)
+        {
+            gui.SetVar("Real user-target angle", realUserAngle);
+            gui.SetVar("Real user-target distance", realUserDist);
+            gui.SetVar("Estimated user distance", estUserPosition.magnitude);
+            gui.SetTargetInfo(transform.position, realUserDir, userDir0);
+        }
+
+        // Determine relative target movement
+        if (nextWaypointDist > 0 &&
+            realUserDist < 3f/4f * defaultDistance / Mathf.Cos(Mathf.Deg2Rad * realUserAngle) * stabilizationTime)
+        {
+            Debug.Log("User too close");
+            float moveDist = Mathf.Min(defaultDistance - realUserDist, nextWaypointDist);  // make sure we don't move past the waypoint
+            return moveDist * nextWaypointDir.normalized;
+        }
+        if (realUserAngle > toleranceAngle / 2f * stabilizationTime)
+        {
+            Debug.Log("User went sideways");
+
+            Vector3 waypointUserDir = user.transform.position - path[nextWaypoint];
+            float beta = Mathf.Deg2Rad * Vector3.SignedAngle(realUserDir, waypointUserDir, Vector3.up);
+            float delta = Mathf.PI/2 - beta;
+            float moveDist = realUserDist * Mathf.Sin(beta);
+            Vector3 move = moveDist * realUserDir.normalized;  // vector with correct magnitude but in direction of user
+
+            // Rotate move vector in correct direction (perpendicular to line between user and next waypoint)
+            move = new Vector3(
+                move.x * Mathf.Cos(delta) - move.z * Mathf.Sin(delta),
+                0,
+                move.x * Mathf.Sin(delta) + move.z * Mathf.Cos(delta)
+            );
+
+            // Set new significant user direction
+            userDir0 = user.transform.position + move - transform.position;
+            userDir0.y = 0;  // project onto horizontal plane
+            
+            return move;
+        }
+        if (realUserDist > 3f/2f * defaultDistance / Mathf.Cos(Mathf.Deg2Rad * realUserAngle) * stabilizationTime)
+        {
+            Debug.Log("User too far");
+            return (realUserDist - defaultDistance) * realUserDir.normalized;
+        }
+
+        return Vector3.zero;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -51,76 +141,33 @@ public class TargetBehaviour : MonoBehaviour
             Debug.Log("Failed to find a valid path");
         }
 
-        userDirection0 = user.transform.position - transform.position;
-        userDirection0.y = 0;  // project onto the horizontal plane
+        // Set initial tolerance zone position
+        userDir0 = user.transform.position - transform.position;
+        userDir0.y = 0;  // project onto the horizontal plane
         UpdateToleranceZone();
 
         // Initialize tracking
         tracking = new Tracking();
-        droneCam = GameObject.Find("DroneCamera").GetComponent<Camera>();
+        droneCam = GameObject.Find("DroneCamera");
         userHeight = user.GetComponent<Renderer>().bounds.size.y;
     }
 
     // FixedUpdate is called once per physics update
     void FixedUpdate()
     {
-        // Calculate user angle and distance
-        Vector3 userDirection = user.transform.position - transform.position;
-        userDirection.y = 0;  // project onto the horizontal plane
-        float userAngle = Vector3.Angle(userDirection, userDirection0);
-        float userDistance = userDirection.magnitude;
-        float computedUserDistance = tracking.GetObjectDistance(droneCam, userHeight);
-
-        // Output debug information
-        if (gui)
-        {
-            gui.SetVar("Real user-target angle", userAngle);
-            gui.SetVar("Real user-target distance", userDistance);
-            gui.SetVar("Estimated user distance", computedUserDistance);
-            gui.SetTargetInfo(transform.position, userDirection, userDirection0);
-        }
-        
         // Don't try to move if there is no path
         if (path == null || nextWaypoint >= path.Count) return;
-
-        // Calculate distance and direction of next waypoint
-        Vector3 nextWaypointDir = path[nextWaypoint] - transform.position;
-        float nextWaypointDist = nextWaypointDir.magnitude;
         
         // Adjust target position when user steps out of tolerance zone
-        if (nextWaypointDist > 0 &&
-            userDistance < 3f/4f * defaultDistance / Mathf.Cos(Mathf.Deg2Rad * userAngle) * stabilizationTime)
+        Vector3 movement = GetMovement();
+        if (movement.magnitude > 0)
         {
-            Debug.Log("User too close");
-            float moveDist = Mathf.Min(defaultDistance - userDistance, nextWaypointDist);  // make sure we don't move past the waypoint
-
-            transform.position += moveDist * nextWaypointDir.normalized;
-            UpdateToleranceZone();
-        }
-        if (userAngle > toleranceAngle / 2f * stabilizationTime)
-        {
-            Debug.Log("User went sideways");
-
-            Vector3 waypointUserDir = user.transform.position - path[nextWaypoint];
-            float beta = Mathf.Deg2Rad * Vector3.SignedAngle(userDirection, waypointUserDir, Vector3.up);
-            float delta = Mathf.PI/2 - beta;
-            float moveDist = userDistance * Mathf.Sin(beta);
-            Vector3 move = moveDist * userDirection.normalized;  // vector with correct magnitude but in direction of user
-            move = new Vector3(move.x * Mathf.Cos(delta) - move.z * Mathf.Sin(delta), 0, move.x * Mathf.Sin(delta) + move.z * Mathf.Cos(delta));  // rotated vector
-
-            transform.position += move;
-            userDirection0 = user.transform.position - transform.position;
-            userDirection0.y = 0;  // project onto horizontal plane
-            UpdateToleranceZone();
-        }
-        if (userDistance > 3f/2f * defaultDistance / Mathf.Cos(Mathf.Deg2Rad * userAngle) * stabilizationTime)
-        {
-            Debug.Log("User too far");
-            transform.position += (userDistance - defaultDistance) * userDirection.normalized;
+            transform.position += movement;
             UpdateToleranceZone();
         }
 
         // If we have reached the current waypoint, select the next node in the path (unless this is the last one)
+        float nextWaypointDist = Vector3.Distance(path[nextWaypoint], transform.position);
         if (nextWaypointDist <= waypointMargin && nextWaypoint < path.Count - 1)
         {
             Debug.Log("Reached waypoint");
@@ -132,22 +179,5 @@ public class TargetBehaviour : MonoBehaviour
     void OnDestroy()
     {
         tracking.Stop();
-    }
-
-    void UpdateToleranceZone()
-    {
-        zoneMesh.Clear();
-
-        Vector3 U = userDirection0.normalized;
-        Vector3 UT = new Vector3(U.z, 0, -U.x);  // orthogonal to U
-
-        zoneMesh.vertices = new Vector3[] {
-            3f/4f * defaultDistance * (U + Mathf.Tan(toleranceAngle/2) * UT),
-            3f/4f * defaultDistance * (U - Mathf.Tan(toleranceAngle/2) * UT),
-            3f/2f * defaultDistance * (U + Mathf.Tan(toleranceAngle/2) * UT),
-            3f/2f * defaultDistance * (U - Mathf.Tan(toleranceAngle/2) * UT)
-        };
-
-        zoneMesh.triangles = new int[] {0, 1, 2, 1, 3, 2};
     }
 }
