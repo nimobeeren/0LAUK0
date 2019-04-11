@@ -38992,11 +38992,6 @@ PrefabInstance:
       propertyPath: drone
       value: 
       objectReference: {fileID: 1102994161}
-    - target: {fileID: 873549668747384922, guid: 165ff170ad3b80d2eb593cd27b8b5bb4,
-        type: 3}
-      propertyPath: useTracking
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 165ff170ad3b80d2eb593cd27b8b5bb4, type: 3}
 --- !u!1 &2030859115

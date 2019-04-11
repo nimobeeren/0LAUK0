@@ -92,11 +92,11 @@ if __name__ == '__main__':
 	trackers = {}
 	# trackers['boosting'] = cv2.TrackerBoosting_create()
 	# trackers['MIL'] = cv2.TrackerMIL_create()
-	# trackers['KCF'] = cv2.TrackerKCF_create()
+	trackers['KCF'] = cv2.TrackerKCF_create()
 	# trackers['TLD'] = cv2.TrackerTLD_create()
 	# trackers['MedianFlow'] = cv2.TrackerMedianFlow_create()
-	# trackers['MOSSE'] = cv2.TrackerMOSSE_create()
-	trackers['CSRT'] = cv2.TrackerCSRT_create()
+	trackers['MOSSE'] = cv2.TrackerMOSSE_create()
+	# trackers['CSRT'] = cv2.TrackerCSRT_create()
 
 	# Initialize trackers using specified bounding box
 	for t in trackers:
